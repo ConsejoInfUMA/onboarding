@@ -21,8 +21,18 @@ class User
     {
         return new User(
             firstName: $data['firstName'],
-            lastName: $data['surname'],
+            lastName: $data['lastName'],
             email: $data['email'],
+            username: $data['username'] ?? null,
+        );
+    }
+
+    public static function fromLdap(array $data): self {
+        return new User(
+            firstName: $data['first_name'][0],
+            lastName: $data['last_name'][0],
+            email: $data['mail'][0],
+            username: $data['uid'][0],
         );
     }
 

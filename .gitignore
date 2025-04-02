@@ -8,6 +8,9 @@ composer.phar
 # Env variables
 /.env
 
+# Dev
+/lldap_data/
+
 # Misc
 /input.csv
 /.~lock.*.csv#
