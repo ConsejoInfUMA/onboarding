@@ -2,23 +2,39 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+use App\Controllers\AuthController;
+use App\Controllers\DiffController;
+use App\Controllers\HomeController;
+use App\Middleware\AuthMiddleware;
 use App\Wrappers\Env;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use App\Wrappers\Session;
 
 // Parse .env file
 Env::parse(__DIR__ . '/.env');
+
+// Start session
+Session::start();
 
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
 );
 
 $router = new League\Route\Router;
+$router->middleware(new AuthMiddleware);
 
-$router->map('GET', '/', function (ServerRequestInterface $request): ResponseInterface {
-    $response = new Laminas\Diactoros\Response;
-    $response->getBody()->write('<h1>Hello, World!</h1>');
-    return $response;
+$router->get('/', [HomeController::class, 'index']);
+$router->post('/', [HomeController::class, 'post']);
+
+// Auth
+$router->group('/login', function () use ($router) {
+    $router->get('/', [AuthController::class, 'index']);
+    $router->post('/', [AuthController::class, 'post']);
+});
+
+// Diff
+$router->group('/diff', function () use ($router) {
+    $router->get('/', [DiffController::class, 'index']);
+    $router->post('/', [AuthController::class, 'post']);
 });
 
 $response = $router->dispatch($request);
