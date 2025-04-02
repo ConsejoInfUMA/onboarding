@@ -8,6 +8,7 @@ use App\Controllers\HomeController;
 use App\Middleware\AuthMiddleware;
 use App\Wrappers\Env;
 use App\Wrappers\Session;
+use League\Route\RouteGroup;
 
 // Parse .env file
 Env::parse(__DIR__ . '/.env');
@@ -26,15 +27,15 @@ $router->get('/', [HomeController::class, 'index']);
 $router->post('/', [HomeController::class, 'post']);
 
 // Auth
-$router->group('/login', function () use ($router) {
-    $router->get('/', [AuthController::class, 'index']);
-    $router->post('/', [AuthController::class, 'post']);
+$router->group('/login', function (RouteGroup $route) {
+    $route->get('/', [AuthController::class, 'index']);
+    $route->post('/', [AuthController::class, 'post']);
 });
 
 // Diff
-$router->group('/diff', function () use ($router) {
-    $router->get('/', [DiffController::class, 'index']);
-    $router->post('/', [AuthController::class, 'post']);
+$router->group('/diff', function (RouteGroup $route) {
+    $route->get('/', [DiffController::class, 'index']);
+    $route->post('/', [AuthController::class, 'post']);
 });
 
 $response = $router->dispatch($request);
