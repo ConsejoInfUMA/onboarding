@@ -36,6 +36,7 @@ $router->group('/login', function (RouteGroup $route) {
 $router->group('/diff', function (RouteGroup $route) {
     $route->get('/', [DiffController::class, 'index']);
     $route->post('/', [DiffController::class, 'post']);
+    $route->post('/apply', [DiffController::class, 'apply']);
 });
 
 $response = $router->dispatch($request);

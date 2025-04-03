@@ -17,6 +17,7 @@
         "league/plates": "^3.6",
         "laminas/laminas-diactoros": "^3.5",
         "laminas/laminas-httphandlerrunner": "^2.11",
-        "league/csv": "^9.23"
+        "league/csv": "^9.23",
+        "hackzilla/password-generator": "^1.7"
     }
 }

@@ -11,10 +11,10 @@
         <tbody>
             <?php foreach ($users as $i => $user): ?>
                 <tr>
-                    <?php $this->insert('partials/cell', ['name' => $name, 'i' => $i, 'key' => 'firstName', 'value' => $user->firstName]) ?>
-                    <?php $this->insert('partials/cell', ['name' => $name, 'i' => $i, 'key' => 'lastName', 'value' => $user->lastName]) ?>
-                    <?php $this->insert('partials/cell', ['name' => $name, 'i' => $i, 'key' => 'email', 'type' => 'email', 'value' => $user->email]) ?>
-                    <?php $this->insert('partials/cell', ['name' => $name, 'i' => $i, 'key' => 'username', 'value' => $user->username]) ?>
+                    <?php $this->insert('partials/cell', ['name' => $name ?? null, 'i' => $i, 'key' => 'firstName', 'value' => $user->firstName]) ?>
+                    <?php $this->insert('partials/cell', ['name' => $name ?? null, 'i' => $i, 'key' => 'lastName', 'value' => $user->lastName]) ?>
+                    <?php $this->insert('partials/cell', ['name' => $name ?? null, 'i' => $i, 'key' => 'email', 'type' => 'email', 'value' => $user->email]) ?>
+                    <?php $this->insert('partials/cell', ['name' => $name ?? null, 'i' => $i, 'key' => 'username', 'value' => $user->username]) ?>
                 </tr>
             <?php endforeach ?>
         </tbody>

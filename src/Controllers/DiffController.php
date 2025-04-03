@@ -21,10 +21,7 @@ class DiffController
             return new RedirectResponse(Env::app_url('/login'));
         }
 
-        $csvUsers = [];
-        foreach ($body['users'] as $user) {
-            $csvUsers[] = User::fromJson($user);
-        }
+        $csvUsers = array_map(fn($user) => User::fromJson($user), $body['users']);
 
         $ldap = new Ldap();
         $ldapUsers = $ldap->getUsers();
@@ -49,6 +46,30 @@ class DiffController
 
     public static function apply(ServerRequestInterface $request): Response
     {
+        $body = $request->getParsedBody();
+        if ($body === null) {
+            // TODO: Show proper error
+            return new RedirectResponse(Env::app_url('/login'));
+        }
+
+        $ldap = new Ldap();
+
+        if (array_key_exists('usersAdd', $body)) {
+            // Agregar usuario a LDAP
+            $usersAdd = array_map(fn($user) => User::fromJson($user, true), $body['usersAdd']);
+            foreach ($usersAdd as $user) {
+                $ldap->addUser($user);
+            }
+        }
+
+        if (array_key_exists('usersRemove', $body)) {
+            // Eliminar usuario de LDAP
+            $usersRemove = array_map(fn($user) => User::fromJson($user, true), $body['usersRemove']);
+            foreach ($usersRemove as $user) {
+                $ldap->removeUser($user);
+            }
+        }
+
         return new HtmlResponse(Plates::render('views/diffApply'));
     }
 }

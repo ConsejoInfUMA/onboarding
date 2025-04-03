@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6ec818dc9da4ed6d615425540cee466e",
+    "content-hash": "5b609db9c8974c46a304b53dc09885b8",
     "packages": [
+        {
+            "name": "hackzilla/password-generator",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hackzilla/password-generator.git",
+                "reference": "743c8493d2c33ebf9496a1c3c248efeb568fe134"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hackzilla/password-generator/zipball/743c8493d2c33ebf9496a1c3c248efeb568fe134",
+                "reference": "743c8493d2c33ebf9496a1c3c248efeb568fe134",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hackzilla\\PasswordGenerator\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Platt",
+                    "email": "github@ofdan.co.uk",
+                    "homepage": "https://www.hackzilla.org"
+                }
+            ],
+            "description": "Password Generator Library",
+            "support": {
+                "issues": "https://github.com/hackzilla/password-generator/issues",
+                "source": "https://github.com/hackzilla/password-generator/tree/1.7.0"
+            },
+            "time": "2024-08-23T17:13:49+00:00"
+        },
         {
             "name": "laminas/laminas-diactoros",
             "version": "3.5.0",
