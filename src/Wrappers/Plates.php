@@ -11,4 +11,10 @@ class Plates {
 
     return $engine->render($template, $data);
   }
+
+  public static function renderError(string $error): string {
+    return self::render('views/error', [
+        'error' => $error
+    ]);
+  }
 }

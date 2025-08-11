@@ -17,8 +17,7 @@ class DiffController
     {
         $body = $request->getParsedBody();
         if (!($body !== null && array_key_exists('users', $body))) {
-            // TODO: Show proper error
-            return new RedirectResponse(Env::app_url('/login'));
+            return new HtmlResponse(Plates::renderError('No body sent'));
         }
 
         $csvUsers = array_map(fn($user) => User::fromJson($user), $body['users']);
@@ -48,8 +47,7 @@ class DiffController
     {
         $body = $request->getParsedBody();
         if ($body === null) {
-            // TODO: Show proper error
-            return new RedirectResponse(Env::app_url('/login'));
+            return new HtmlResponse(Plates::renderError('No body sent'));
         }
 
         $ldap = new Ldap();
