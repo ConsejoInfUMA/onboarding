@@ -7,7 +7,11 @@ use App\Controllers\DiffController;
 use App\Controllers\HomeController;
 use App\Middleware\AuthMiddleware;
 use App\Wrappers\Env;
+use App\Wrappers\Plates;
 use App\Wrappers\Session;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use League\Route\Http\Exception\HttpExceptionInterface;
 use League\Route\RouteGroup;
 
 // Parse .env file
@@ -39,7 +43,13 @@ $router->group('/diff', function (RouteGroup $route) {
     $route->post('/apply', [DiffController::class, 'apply']);
 });
 
-$response = $router->dispatch($request);
+$response = null;
+
+try {
+    $response = $router->dispatch($request);
+} catch (HttpExceptionInterface $e) {
+    $response = new HtmlResponse(Plates::renderError($e->getMessage()), $e->getStatusCode());
+}
 
 // send the response to the browser
-(new Laminas\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+(new SapiEmitter)->emit($response);
