@@ -60,7 +60,7 @@ class DiffController
 
         if (array_key_exists('usersRemove', $body)) {
             // Eliminar usuario de LDAP
-            $usersRemove = array_map(fn($user) => User::fromJson($user, true), $body['usersRemove']);
+            $usersRemove = array_map(fn($user) => User::fromJson($user), $body['usersRemove']);
             foreach ($usersRemove as $user) {
                 $ldap->removeUser($user);
             }

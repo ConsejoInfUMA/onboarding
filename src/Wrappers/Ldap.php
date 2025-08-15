@@ -64,9 +64,10 @@ class Ldap
 
     public function addUser(User $user): bool
     {
-        return ldap_add(
+        $dn = $this->__buildUserDn($user->username);
+        $added = ldap_add(
             ldap: $this->conn,
-            dn: "uid={$user->username},ou=people,{$this->base}",
+            dn: $dn,
             entry: [
                 'objectClass' => 'person',
                 'uid' => $user->username,
@@ -75,17 +76,26 @@ class Ldap
                 'sn' => $user->lastName,
                 'mail' => $user->email,
                 'user_id' => $user->username,
-                // TODO: User password not working
-                'userPassword' => $user->password,
             ],
         );
+
+        if (!$added) {
+            return false;
+        }
+
+        return ldap_exop_passwd($this->conn, $dn, '', $user->password);
     }
 
     public function removeUser(User $user): bool
     {
         return ldap_delete(
             ldap: $this->conn,
-            dn: "uid={$user->username},ou=people,{$this->base}",
+            dn: $this->__buildUserDn($user->username)
         );
+    }
+
+    private function __buildUserDn(string $username): string
+    {
+        return "uid={$username},{$this->base}";
     }
 }
