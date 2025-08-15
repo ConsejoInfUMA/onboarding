@@ -16,15 +16,13 @@ class Env {
   }
 
   public static function ldap(): array {
-    $host = $_ENV["LDAP_HOST"] ?? "127.0.0.1";
-    $port = $_ENV["LDAP_PORT"] ?? 3306;
+    $uri = $_ENV["LDAP_URI"] ?? "ldap://127.0.0.1:3306";
     $dn = $_ENV["LDAP_DN"] ?? '';
     $password = $_ENV["LDAP_PASSWORD"] ?? null;
     $base = $_ENV["LDAP_BASE"] ?? null;
 
     return [
-      "host" => $host,
-      "port" => $port,
+      "uri" => $uri,
       "dn" => $dn,
       "password" => $password,
       "base" => $base,

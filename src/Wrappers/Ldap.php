@@ -15,7 +15,7 @@ class Ldap
         $config = Env::ldap();
         $this->base = $config['base'];
 
-        $conn = ldap_connect($config['host'], $config['port']);
+        $conn = ldap_connect($config['uri']);
 
         if ($conn === false) {
             throw new \Exception("Could not connect to ldap");
