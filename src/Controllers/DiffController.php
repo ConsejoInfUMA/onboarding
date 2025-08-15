@@ -3,12 +3,10 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use App\Wrappers\Env;
 use App\Wrappers\Ldap;
 use App\Wrappers\Plates;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DiffController
