@@ -1,36 +1,54 @@
 <?php
+
 namespace App\Wrappers;
 
-class Env {
-  public static function parse(string $path): void {
-    $arr = parse_ini_file($path);
+class Env
+{
+    public static function parse(string $path): void
+    {
+        $arr = parse_ini_file($path);
 
-    if ($arr === false) {
-      return;
+        if ($arr === false) {
+            return;
+        }
+
+        foreach ($arr as $key => $val) {
+            putenv("$key=$val");
+            $_ENV[$key] = $val;
+        }
     }
 
-    foreach ($arr as $key => $val) {
-      putenv("$key=$val");
-      $_ENV[$key] = $val;
+    public static function ldap(): array
+    {
+        $uri = $_ENV["LDAP_URI"] ?? "ldap://127.0.0.1:3306";
+        $username = $_ENV["LDAP_USERNAME"] ?? '';
+        $password = $_ENV["LDAP_PASSWORD"] ?? null;
+        $base = $_ENV["LDAP_BASE"] ?? null;
+
+        return [
+            "uri" => $uri,
+            "username" => $username,
+            "password" => $password,
+            "base" => $base,
+        ];
     }
-  }
 
-  public static function ldap(): array {
-    $uri = $_ENV["LDAP_URI"] ?? "ldap://127.0.0.1:3306";
-    $username = $_ENV["LDAP_USERNAME"] ?? '';
-    $password = $_ENV["LDAP_PASSWORD"] ?? null;
-    $base = $_ENV["LDAP_BASE"] ?? null;
+    public static function app_url(string $path): string
+    {
+        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
+        return $base . $path;
+    }
 
-    return [
-      "uri" => $uri,
-      "username" => $username,
-      "password" => $password,
-      "base" => $base,
-    ];
-  }
+    public static function csv_columns(): array
+    {
+        $firstName = $_ENV['CSV_COLUMN_FIRSTNAME'] ?? '';
+        $lastName = $_ENV['CSV_COLUMN_LASTNAME'] ?? '';
+        $email = $_ENV['CSV_COLUMN_EMAIL'] ?? '';
 
-  public static function app_url(string $path): string {
-    $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
-    return $base . $path;
-  }
+        return [
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+        ];
+    }
 }

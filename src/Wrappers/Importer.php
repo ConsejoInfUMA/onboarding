@@ -21,13 +21,15 @@ class Importer
             ->setHeaderOffset(0)
             ->setEscape('');
 
+        $csvColumns = Env::csv_columns();
+
         foreach ($csv as $record) {
             // Evitar entradas vacías
-            if ($record['Apellido(s)'] !== '') {
+            if ($record[$csvColumns['lastName']] !== '') {
                 $users[] = new User(
-                    firstName: ucwords(mb_strtolower($record['Nombre'])),
-                    lastName: ucwords(mb_strtolower($record['Apellido(s)'])),
-                    email: $record['Correo principal de contacto'],
+                    firstName: ucwords(mb_strtolower($record[$csvColumns['firstName']])),
+                    lastName: ucwords(mb_strtolower($record[$csvColumns['lastName']])),
+                    email: $record[$csvColumns['email']],
                 );
             }
         }
