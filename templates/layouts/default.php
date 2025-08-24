@@ -26,6 +26,12 @@
     <?php endif ?>
         <?= $this->section('content') ?>
     </main>
+
+    <?php if ($this->isLoggedIn()): ?>
+    <footer>
+        <a href="<?=$this->url('/logout')?>">Logout</a>
+    </footer>
+    <?php endif ?>
 </body>
 
 </html>

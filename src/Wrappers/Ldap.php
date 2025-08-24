@@ -10,12 +10,12 @@ class Ldap
     private Connection $conn;
     private string $base;
 
-    public function __construct()
+    public function __construct(?string $password = null)
     {
         $config = Env::ldap();
         $this->base = $config['base'];
 
-        $conn = ldap_connect($config['uri']);
+        $conn = @ldap_connect($config['uri']);
 
         if ($conn === false) {
             throw new \Exception("Could not connect to ldap");
@@ -24,7 +24,7 @@ class Ldap
         ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         $this->conn = $conn;
 
-        $r = ldap_bind($this->conn, $config['dn'], $config['password']);
+        $r = @ldap_bind($this->conn, $this->__buildUserDn($config['username']), $password ?? $config['password']);
         if (!$r) {
             throw new \Exception("Could not bind to ldap");
         }
@@ -35,6 +35,11 @@ class Ldap
         ldap_unbind($this->conn);
     }
 
+    /**
+     * Get all users found in LDAP server.
+     *
+     * @return User[]
+     */
     public function getUsers(): array
     {
         $users = [];
@@ -62,6 +67,9 @@ class Ldap
         return $users;
     }
 
+    /**
+     * Add a user to the database
+     */
     public function addUser(User $user): bool
     {
         $dn = $this->__buildUserDn($user->username);

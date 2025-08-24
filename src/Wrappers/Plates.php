@@ -8,6 +8,7 @@ class Plates {
     $engine = new Engine(__DIR__ . '/../../templates');
 
     $engine->registerFunction('url', fn(string $path) => Env::app_url($path));
+    $engine->registerFunction('isLoggedIn', fn() => Session::isLoggedIn());
 
     return $engine->render($template, $data);
   }

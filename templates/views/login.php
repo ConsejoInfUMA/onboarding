@@ -6,5 +6,11 @@
         <input type="password" name="password">
     </p>
 
+    <?php if(isset($error)): ?>
+    <p>
+        <small><?=$this->e($error)?></small>
+    </p>
+    <?php endif ?>
+
     <button type="submit">Send</button>
 </form>

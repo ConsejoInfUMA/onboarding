@@ -36,6 +36,8 @@ $router->group('/login', function (RouteGroup $route) {
     $route->post('/', [AuthController::class, 'post']);
 });
 
+$router->get('/logout', [AuthController::class, 'logout']);
+
 // Diff
 $router->group('/diff', function (RouteGroup $route) {
     $route->get('/', [DiffController::class, 'index']);
