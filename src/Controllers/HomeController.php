@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Wrappers\Env;
@@ -10,12 +11,15 @@ use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\ServerRequestInterface;
 
-class HomeController {
-    public static function index(ServerRequestInterface $request): Response {
+class HomeController
+{
+    public static function index(ServerRequestInterface $request): Response
+    {
         return new HtmlResponse(Plates::render('views/home'));
     }
 
-    public static function post(ServerRequestInterface $request): Response {
+    public static function post(ServerRequestInterface $request): Response
+    {
         $files = $request->getUploadedFiles();
 
         if (!array_key_exists('csv', $files)) {

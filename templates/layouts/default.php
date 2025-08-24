@@ -16,6 +16,11 @@
                 <li>
                     <a href="<?=$this->url('/')?>">Home</a>
                 </li>
+                <?php if ($this->isLoggedIn()): ?>
+                <li>
+                    <a href="<?=$this->url('/logout')?>">Logout</a>
+                </li>
+                <?php endif ?>
             </ul>
         </nav>
     </header>
@@ -26,12 +31,6 @@
     <?php endif ?>
         <?= $this->section('content') ?>
     </main>
-
-    <?php if ($this->isLoggedIn()): ?>
-    <footer>
-        <a href="<?=$this->url('/logout')?>">Logout</a>
-    </footer>
-    <?php endif ?>
 </body>
 
 </html>

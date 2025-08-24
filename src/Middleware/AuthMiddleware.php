@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Middleware;
 
 use App\Wrappers\Env;
@@ -9,7 +10,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class AuthMiddleware implements MiddlewareInterface {
+class AuthMiddleware implements MiddlewareInterface
+{
     /**
      * {@inheritdoc}
      */
