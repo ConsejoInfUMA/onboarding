@@ -12,5 +12,5 @@
     </p>
     <?php endif ?>
 
-    <button type="submit">Send</button>
+    <button type="submit">Login</button>
 </form>

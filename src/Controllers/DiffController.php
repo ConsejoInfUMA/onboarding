@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Wrappers\Ldap;
+use App\Wrappers\Mail;
 use App\Wrappers\Plates;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -48,6 +49,7 @@ class DiffController
             return new HtmlResponse(Plates::renderError('No body sent'));
         }
 
+        $mailer = new Mail();
         $ldap = new Ldap();
 
         if (array_key_exists('usersAdd', $body)) {
@@ -55,6 +57,7 @@ class DiffController
             $usersAdd = array_map(fn($user) => User::fromJson($user, true), $body['usersAdd']);
             foreach ($usersAdd as $user) {
                 $ldap->addUser($user);
+                $mailer->sendWelcome($user);
             }
         }
 

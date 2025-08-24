@@ -18,6 +18,18 @@ class Env
         }
     }
 
+    public static function app_url(string $path): string
+    {
+        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
+        return $base . $path;
+    }
+
+    public static function instance_url(string $path): string
+    {
+        $base = $_ENV['INSTANCE_URL'] ?? 'http://localhost';
+        return $base . $path;
+    }
+
     public static function ldap(): array
     {
         $uri = $_ENV["LDAP_URI"] ?? "ldap://127.0.0.1:3306";
@@ -33,10 +45,23 @@ class Env
         ];
     }
 
-    public static function app_url(string $path): string
+    public static function mail(): array
     {
-        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
-        return $base . $path;
+        $host = $_ENV['MAIL_HOST'] ?? 'localhost';
+        $port = $_ENV['MAIL_PORT'] ?? 25;
+        $username = $_ENV['MAIL_USERNAME'] ?? '';
+        $password = $_ENV['MAIL_PASSWORD'] ?? '';
+        $secure = $_ENV['MAIL_SECURE'] ?? '';
+        $from = $_ENV['MAIL_FROM'] ?? '';
+
+        return [
+            'host' => $host,
+            'port' => $port,
+            'username' => $username,
+            'password' => $password,
+            'secure' => $secure,
+            'from' => $from,
+        ];
     }
 
     public static function csv_columns(): array

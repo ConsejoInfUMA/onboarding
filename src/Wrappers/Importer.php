@@ -24,12 +24,15 @@ class Importer
         $csvColumns = Env::csv_columns();
 
         foreach ($csv as $record) {
+            $firstName = $record[$csvColumns['firstName']];
+            $lastName = $record[$csvColumns['lastName']];
+            $email = $record[$csvColumns['email']];
             // Evitar entradas vacías
-            if ($record[$csvColumns['lastName']] !== '') {
+            if ($lastName !== '') {
                 $users[] = new User(
-                    firstName: ucwords(mb_strtolower($record[$csvColumns['firstName']])),
-                    lastName: ucwords(mb_strtolower($record[$csvColumns['lastName']])),
-                    email: $record[$csvColumns['email']],
+                    firstName: self::__normalize($firstName),
+                    lastName: self::__normalize($lastName),
+                    email: $email,
                 );
             }
         }
@@ -37,5 +40,10 @@ class Importer
         // Eliminar usuarios duplicados
         $usersFiltered = array_unique($users);
         return $usersFiltered;
+    }
+
+    private static function __normalize(string $str): string
+    {
+        return ucwords(mb_strtolower($str));
     }
 }
