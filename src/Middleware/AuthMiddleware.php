@@ -17,7 +17,7 @@ class AuthMiddleware implements MiddlewareInterface {
     {
         $path = $request->getUri()->getPath();
 
-        if (!str_contains($path, '/login') && !Session::isLoggedIn()) {
+        if (!str_starts_with($path, '/login') && !Session::isLoggedIn()) {
             return new RedirectResponse(Env::app_url('/login'));
         }
 

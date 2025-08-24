@@ -49,6 +49,8 @@ try {
     $response = $router->dispatch($request);
 } catch (HttpExceptionInterface $e) {
     $response = new HtmlResponse(Plates::renderError($e->getMessage()), $e->getStatusCode());
+} catch (\Throwable $e) {
+    $response = new HtmlResponse(Plates::renderError($e->getMessage()), 500);
 }
 
 // send the response to the browser
