@@ -2,7 +2,7 @@
 
 <h3>Registro</h3>
 
-<p>¡Bienvenid@, <?=$this->e($user->firstName)?>!</p>
+<p>¡Hola, <?=$this->e($user->firstName)?>!</p>
 
 <form method="post" action="<?= $this->url('/register') ?>" enctype="multipart/form-data">
     <fieldset>
