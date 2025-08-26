@@ -2,12 +2,10 @@
 
 namespace App\Controllers;
 
-use App\Wrappers\Env;
 use App\Wrappers\Csv;
 use App\Wrappers\Plates;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\Response\RedirectResponse;
 use Laminas\Diactoros\UploadedFile;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -23,7 +21,8 @@ class HomeController
         $files = $request->getUploadedFiles();
 
         if (!array_key_exists('csv', $files)) {
-            return new RedirectResponse(Env::app_url('/'));
+            http_response_code(400);
+            return new HtmlResponse(Plates::renderError('File not sent'));
         }
 
         /** @var UploadedFile */

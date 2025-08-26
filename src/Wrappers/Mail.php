@@ -14,7 +14,7 @@ class Mail
     public function __construct()
     {
         $mail = Env::mail();
-        $this->client = new PHPMailer(true);
+        $this->client = new PHPMailer();
         $this->client->CharSet = 'UTF-8';
         $this->client->isSMTP();
         $this->client->Host = $mail['host'];
@@ -36,7 +36,7 @@ class Mail
     /**
      * Send welcome message to user
      */
-    public function sendWelcome(User $user): void
+    public function sendWelcome(User $user, string $token): bool
     {
         $this->client->addAddress($user->email, $user->getFullName());
         $this->client->isHTML();
@@ -44,14 +44,17 @@ class Mail
 
         $body = Plates::render('views/mails/welcome', [
             'user' => $user,
+            'token' => $token,
         ]);
 
         $this->client->Body = $body;
         $this->client->AltBody = (new Html2Text($body))->getText();
-        $this->client->send();
+        $ok = $this->client->send();
 
         // Cleanup
         $this->__cleanup();
+
+        return $ok;
     }
 
     private function __cleanup(): void

@@ -13,22 +13,16 @@
         Debido a que eres representante de asignatura, formas parte del Consejo de Estudiantes.
     </p>
     <p>
-        ¡Bienvenid@! A todos los miembros del consejo se le genera una cuenta en nuestro servidor.
+        ¡Bienvenid@! :)
     </p>
+
     <p>
-        Tenemos disponibles los siguientes servicios:
+        A todos los miembros del consejo se le crea una cuenta en nuestro servidor.
     </p>
-    <ul>
-        <li><a href="<?=$this->instance_url('/nextcloud')?>">Nextcloud</a>: Este es nuestro sitio principal de trabajo.</li>
-    </ul>
 
-    <p>Éstas son tus credenciales:</p>
-    <ul>
-        <li>Nombre de usuario: <?=$this->e($user->username)?></li>
-        <li>Contraseña: <?=$this->e($user->password)?></li>
-    </ul>
-
-    <p>Puedes cambiar tu contraseña <a href="<?=$this->instance_url('/')?>">aquí</a></p>
+    <p>
+        Para activar tu cuenta haz click <a href="<?=$this->url('/register', ['token' => $token])?>">aquí</a>
+    </p>
 
     <p>¡Un saludo!</p>
 </body>

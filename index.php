@@ -5,6 +5,7 @@ require __DIR__ . '/vendor/autoload.php';
 use App\Controllers\AuthController;
 use App\Controllers\DiffController;
 use App\Controllers\HomeController;
+use App\Controllers\RegisterController;
 use App\Middleware\AuthMiddleware;
 use App\Wrappers\Env;
 use App\Wrappers\Plates;
@@ -43,6 +44,12 @@ $router->group('/diff', function (RouteGroup $route) {
     $route->get('/', [DiffController::class, 'index']);
     $route->post('/', [DiffController::class, 'post']);
     $route->post('/apply', [DiffController::class, 'apply']);
+});
+
+// Register
+$router->group('/register', function (RouteGroup $route) {
+    $route->get('/', [RegisterController::class, 'index']);
+    $route->post('/', [RegisterController::class, 'post']);
 });
 
 $response = null;

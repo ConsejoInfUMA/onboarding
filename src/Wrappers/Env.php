@@ -18,16 +18,39 @@ class Env
         }
     }
 
-    public static function app_url(string $path): string
+    public static function app_url(string $path, ?array $query = null): string
     {
         $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
-        return $base . $path;
+        $queryStr = '';
+
+        if ($query !== null) {
+            $queryStr = '?' . http_build_query($query);
+        }
+
+        return $base . $path . $queryStr;
     }
 
     public static function instance_url(string $path): string
     {
         $base = $_ENV['INSTANCE_URL'] ?? 'http://localhost';
         return $base . $path;
+    }
+
+    public static function db(): array
+    {
+        $host = $_ENV["DB_HOST"] ?? "127.0.0.1";
+        $port = $_ENV["DB_PORT"] ?? 3306;
+        $user = $_ENV["DB_USER"] ?? "";
+        $password = $_ENV["DB_PASSWORD"] ?? "";
+        $name = $_ENV["DB_NAME"] ?? "onboarding";
+
+        return [
+            "host" => $host,
+            "port" => $port,
+            "database" => $name,
+            "username" => $user,
+            "password" => $password
+        ];
     }
 
     public static function ldap(): array

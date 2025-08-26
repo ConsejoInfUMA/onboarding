@@ -70,7 +70,7 @@ class Ldap
     /**
      * Add a user to the database
      */
-    public function addUser(User $user): bool
+    public function addUser(User $user, string $password): bool
     {
         $dn = $this->__buildUserDn($user->username);
         $added = ldap_add(
@@ -79,7 +79,7 @@ class Ldap
             entry: [
                 'objectClass' => 'person',
                 'uid' => $user->username,
-                'cn' => $user->username,
+                'cn' => $user->getFullName(),
                 'givenName' => $user->firstName,
                 'sn' => $user->lastName,
                 'mail' => $user->email,
@@ -91,7 +91,7 @@ class Ldap
             return false;
         }
 
-        return ldap_exop_passwd($this->conn, $dn, '', $user->password);
+        return ldap_exop_passwd($this->conn, $dn, '', $password);
     }
 
     public function removeUser(User $user): bool

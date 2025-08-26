@@ -3,8 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use App\Wrappers\Ldap;
-use App\Wrappers\Mail;
+use App\Wrappers\DataHandler;
 use App\Wrappers\Plates;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -19,17 +18,17 @@ class DiffController
             return new HtmlResponse(Plates::renderError('No body sent'));
         }
 
-        $csvUsers = array_map(fn($user) => User::fromJson($user), $body['users']);
+        $csvUsers = array_map(fn($user) => User::fromArray($user), $body['users']);
 
-        $ldap = new Ldap();
-        $ldapUsers = $ldap->getUsers();
+        $handler = new DataHandler;
+        $localUsers = $handler->getUsers();
 
         # Usuarios que están en en el CSV pero no en el LDAP
-        $usersAdd = array_diff($csvUsers, $ldapUsers);
+        $usersAdd = array_diff($csvUsers, $localUsers);
         # Usuarios que están tanto en el CSV como en el LDAP
-        $usersOk = array_intersect($csvUsers, $ldapUsers);
+        $usersOk = array_intersect($csvUsers, $localUsers);
         # Usuarios que están en el LDAP pero no en el CSV
-        $usersRemove = array_diff($ldapUsers, $csvUsers);
+        $usersRemove = array_diff($localUsers, $csvUsers);
 
         sort($usersAdd);
         sort($usersOk);
@@ -49,26 +48,37 @@ class DiffController
             return new HtmlResponse(Plates::renderError('No body sent'));
         }
 
-        $mailer = new Mail();
-        $ldap = new Ldap();
+        $handler = new DataHandler;
+
+        $errors = [
+            'usersAdd' => [],
+            'usersRemove' => [],
+        ];
 
         if (array_key_exists('usersAdd', $body)) {
-            // Agregar usuario a LDAP
-            $usersAdd = array_map(fn($user) => User::fromJson($user, true), $body['usersAdd']);
+            // Invite user
+            $usersAdd = array_map(fn($user) => User::fromArray($user), $body['usersAdd']);
             foreach ($usersAdd as $user) {
-                $ldap->addUser($user);
-                $mailer->sendWelcome($user);
+                $ok = $handler->inviteUser($user);
+                if (!$ok) {
+                    $errors['usersAdd'][] = $user;
+                }
             }
         }
 
         if (array_key_exists('usersRemove', $body)) {
-            // Eliminar usuario de LDAP
-            $usersRemove = array_map(fn($user) => User::fromJson($user), $body['usersRemove']);
+            // Delete user from LDAP or invite
+            $usersRemove = array_map(fn($user) => User::fromArray($user), $body['usersRemove']);
             foreach ($usersRemove as $user) {
-                $ldap->removeUser($user);
+                $ok = $handler->removeUser($user);
+                if (!$ok) {
+                    $errors['usersRemove'][] = $user;
+                }
             }
         }
 
-        return new HtmlResponse(Plates::render('views/diffApply'));
+        return new HtmlResponse(Plates::render('views/diffApply', [
+            'errors' => $errors,
+        ]));
     }
 }
