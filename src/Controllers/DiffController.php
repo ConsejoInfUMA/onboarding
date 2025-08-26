@@ -11,6 +11,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DiffController
 {
+    /**
+     * From parsed CSV file, show users to be added, deleted and unmodified.
+     */
     public static function post(ServerRequestInterface $request): Response
     {
         $body = $request->getParsedBody();
@@ -41,6 +44,9 @@ class DiffController
         ]));
     }
 
+    /**
+     * Confirm changes and add / remove users.
+     */
     public static function apply(ServerRequestInterface $request): Response
     {
         $body = $request->getParsedBody();

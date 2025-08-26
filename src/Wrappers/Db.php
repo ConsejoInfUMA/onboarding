@@ -4,6 +4,9 @@ namespace App\Wrappers;
 
 use App\Models\User;
 
+/**
+ * DB Wrapper
+ */
 class Db
 {
     private \mysqli $client;
@@ -20,6 +23,8 @@ class Db
     }
 
     /**
+     * Get all invites available.
+     *
      * @return User[]
      */
     public function getInvites(): array
@@ -33,6 +38,11 @@ class Db
         return $users;
     }
 
+    /**
+     * Create an invite for a user.
+     *
+     * @return ?string Token
+     */
     public function createInvite(User $user): ?string
     {
         $token = $this->__generateToken();
@@ -42,6 +52,9 @@ class Db
         return $ok ? $token : null;
     }
 
+    /**
+     * Find invite by token.
+     */
     public function getInviteByToken(string $token): ?User
     {
         $stmt = $this->client->prepare('SELECT id, username, firstName, lastName, email, token FROM invites WHERE token=?');
@@ -58,6 +71,9 @@ class Db
         return User::fromArray($row);
     }
 
+    /**
+     * Check if invite exists by email.
+     */
     public function checkInviteExistsByEmail(string $email): bool
     {
         $stmt = $this->client->prepare('SELECT id FROM invites WHERE email=?');
@@ -73,6 +89,9 @@ class Db
         return $stmt->num_rows > 0;
     }
 
+    /**
+     * Remove invite by email.
+     */
     public function removeInviteByEmail(string $email): bool
     {
         $stmt = $this->client->prepare('DELETE FROM invites WHERE email=?');

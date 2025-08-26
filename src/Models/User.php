@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+/**
+ * User main model.
+ */
 class User
 {
     public string $firstName;
@@ -17,6 +20,9 @@ class User
         $this->username = $username ?? $this->__buildUsername();
     }
 
+    /**
+     * Build User from array.
+     */
     public static function fromArray(array $data): self
     {
         return new User(
@@ -27,6 +33,9 @@ class User
         );
     }
 
+    /**
+     * Build User from LDAP response.
+     */
     public static function fromLdap(array $data): self
     {
         return new User(
@@ -37,6 +46,9 @@ class User
         );
     }
 
+    /**
+     * Build full name from first and last name.
+     */
     public function getFullName(): string
     {
         return "{$this->firstName} {$this->lastName}";

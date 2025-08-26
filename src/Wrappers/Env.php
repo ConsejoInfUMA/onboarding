@@ -2,8 +2,14 @@
 
 namespace App\Wrappers;
 
+/**
+ * Enviroment variables wrapper
+ */
 class Env
 {
+    /**
+     * Parse all variables from .env file.
+     */
     public static function parse(string $path): void
     {
         $arr = parse_ini_file($path);
@@ -18,6 +24,9 @@ class Env
         }
     }
 
+    /**
+     * Get full app url.
+     */
     public static function app_url(string $path, ?array $query = null): string
     {
         $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
@@ -30,12 +39,18 @@ class Env
         return $base . $path . $queryStr;
     }
 
+    /**
+     * Get full instance url where all services provided are.
+     */
     public static function instance_url(string $path): string
     {
         $base = $_ENV['INSTANCE_URL'] ?? 'http://localhost';
         return $base . $path;
     }
 
+    /**
+     * Get DB data.
+     */
     public static function db(): array
     {
         $host = $_ENV["DB_HOST"] ?? "127.0.0.1";
@@ -53,6 +68,9 @@ class Env
         ];
     }
 
+    /**
+     * Get LDAP data.
+     */
     public static function ldap(): array
     {
         $uri = $_ENV["LDAP_URI"] ?? "ldap://127.0.0.1:3306";
@@ -68,6 +86,9 @@ class Env
         ];
     }
 
+    /**
+     * Get SMTP data.
+     */
     public static function mail(): array
     {
         $host = $_ENV['MAIL_HOST'] ?? 'localhost';
@@ -87,6 +108,9 @@ class Env
         ];
     }
 
+    /**
+     * Get CSV headers used for parsing.
+     */
     public static function csv_columns(): array
     {
         $firstName = $_ENV['CSV_COLUMN_FIRSTNAME'] ?? '';

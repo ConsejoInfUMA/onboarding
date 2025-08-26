@@ -13,6 +13,8 @@
         }
     ],
     "require": {
+        "ext-mysqli": "*",
+        "ext-ldap": "*",
         "league/route": "^6.2",
         "league/plates": "^3.6",
         "laminas/laminas-diactoros": "^3.5",

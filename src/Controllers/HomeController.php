@@ -11,11 +11,17 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class HomeController
 {
+    /**
+     * CSV import page.
+     */
     public static function index(ServerRequestInterface $request): Response
     {
         return new HtmlResponse(Plates::render('views/home'));
     }
 
+    /**
+     * CSV import form sent.
+     */
     public static function post(ServerRequestInterface $request): Response
     {
         $files = $request->getUploadedFiles();

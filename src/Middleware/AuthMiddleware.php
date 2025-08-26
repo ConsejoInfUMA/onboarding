@@ -10,6 +10,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Check if admin is logged in before entering restricted routes.
+ */
 class AuthMiddleware implements MiddlewareInterface
 {
     /**

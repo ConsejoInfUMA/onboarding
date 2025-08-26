@@ -4,6 +4,9 @@ namespace App\Wrappers;
 
 use App\Models\User;
 
+/**
+ * Helper class that wraps LDAP, DB and Mailer.
+ */
 class DataHandler
 {
     private Ldap $ldap;
@@ -18,7 +21,7 @@ class DataHandler
     }
 
     /**
-     * Get invited users and users already on LDAP server.
+     * Get both invited and already on LDAP server users.
      *
      * @return User[]
      */
@@ -30,6 +33,11 @@ class DataHandler
         ];
     }
 
+    /**
+     * Invite user workflow.
+     *
+     * Send email with token if it was created and saved in db.
+     */
     public function inviteUser(User $user): bool
     {
         $mailOk = false;
@@ -42,6 +50,11 @@ class DataHandler
         return $token !== null && $mailOk;
     }
 
+    /**
+     * Remove user workflow.
+     *
+     * Remove from DB if exists, if not from LDAP
+     */
     public function removeUser(User $user): bool
     {
         // Try to find if user didn't accept invite yet.

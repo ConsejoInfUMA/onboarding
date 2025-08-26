@@ -11,6 +11,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RegisterController
 {
+    /**
+     * User register page.
+     *
+     * Requires a token sent by the user via query.
+     */
     public static function index(ServerRequestInterface $request): Response
     {
         $query = $request->getQueryParams();
@@ -30,6 +35,11 @@ class RegisterController
         ]));
     }
 
+    /**
+     * User register form sent.
+     *
+     * Requires token, password + confirm and username sent via POST body.
+     */
     public static function post(ServerRequestInterface $request): Response
     {
         $body = $request->getParsedBody();

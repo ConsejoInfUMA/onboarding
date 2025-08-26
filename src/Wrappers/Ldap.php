@@ -68,7 +68,7 @@ class Ldap
     }
 
     /**
-     * Add a user to the database
+     * Add a user to LDAP.
      */
     public function addUser(User $user, string $password): bool
     {

@@ -11,13 +11,22 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Admin auth controller
+ */
 class AuthController
 {
+    /**
+     * Login page.
+     */
     public static function index(ServerRequestInterface $request): Response
     {
         return new HtmlResponse(Plates::render('views/login'));
     }
 
+    /**
+     * Login form sent.
+     */
     public static function post(ServerRequestInterface $request): Response
     {
         $body = $request->getParsedBody();
@@ -37,6 +46,9 @@ class AuthController
         }
     }
 
+    /**
+     * Destroy session.
+     */
     public static function logout(ServerRequestInterface $request): Response
     {
         Session::destroy();
