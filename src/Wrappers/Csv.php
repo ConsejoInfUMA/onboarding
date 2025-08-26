@@ -5,7 +5,7 @@ namespace App\Wrappers;
 use App\Models\User;
 use League\Csv\Reader;
 
-class Importer
+class Csv
 {
     /**
      * Get all users from CSV
