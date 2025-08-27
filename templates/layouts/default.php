@@ -16,6 +16,9 @@
                 <li>
                     <a href="<?=$this->url('/')?>">Home</a>
                 </li>
+                <li>
+                    <a href="<?=$this->url('/invites')?>">Invites</a>
+                </li>
                 <?php if ($this->isLoggedIn()): ?>
                 <li>
                     <a href="<?=$this->url('/logout')?>">Logout</a>
