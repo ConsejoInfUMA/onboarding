@@ -29,6 +29,11 @@ class RegisterController
 
         $user = $db->getInviteByToken($token);
 
+        if ($user === null) {
+            http_response_code(400);
+            return new HtmlResponse(Plates::renderError('Invalid token'));
+        }
+
         return new HtmlResponse(Plates::render('views/register', [
             'user' => $user,
             'token' => $token,

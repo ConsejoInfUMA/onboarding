@@ -64,6 +64,10 @@ class Db
 
         $row = $stmt->fetch();
 
+        if ($row === false) {
+            return null;
+        }
+
         return User::fromArray($row);
     }
 
