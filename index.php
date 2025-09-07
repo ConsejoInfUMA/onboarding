@@ -3,6 +3,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\AuthController;
+use App\Controllers\DevController;
 use App\Controllers\DiffController;
 use App\Controllers\HomeController;
 use App\Controllers\InviteController;
@@ -56,6 +57,12 @@ $router->group('/register', function (RouteGroup $route) {
 $router->group('/invites', function (RouteGroup $route) {
     $route->get('/', [InviteController::class, 'index']);
 });
+
+if (Env::app_debug()) {
+    $router->group('/dev', function (RouteGroup $route) {
+        $route->get('/email', [DevController::class, 'email']);
+    });
+}
 
 $response = null;
 
