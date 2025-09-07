@@ -9,17 +9,16 @@ use App\Models\User;
  */
 class Db
 {
-    private \mysqli $client;
+    private \PDO $client;
 
     public function __construct()
     {
         $db = Env::db();
-        $this->client = new \mysqli($db['host'], $db['username'], $db['password'], $db['database'], $db['port']);
-    }
-
-    public function __destruct()
-    {
-        $this->client->close();
+        $this->client = new \PDO($db['dsn'], $db['username'], $db['password'], [
+            \PDO::ATTR_ERRMODE            => \PDO::ERR_NONE,
+            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+            \PDO::ATTR_EMULATE_PREPARES   => false,
+        ]);
     }
 
     /**
@@ -30,9 +29,9 @@ class Db
     public function getInvites(): array
     {
         $users = [];
-        $result = $this->client->query('SELECT username, firstName, lastName, email FROM invites');
-        foreach ($result as $user) {
-            $users[] = User::fromArray($user);
+        $stmt = $this->client->query('SELECT username, firstName, lastName, email FROM invites');
+        while ($row = $stmt->fetch()) {
+            $users[] = User::fromArray($row);
         }
 
         return $users;
@@ -47,8 +46,7 @@ class Db
     {
         $token = $this->__generateToken();
         $stmt = $this->client->prepare('INSERT INTO invites(username, firstName, lastName, email, token) VALUES(?, ?, ?, ?, ?)');
-        $stmt->bind_param('sssss', $user->username, $user->firstName, $user->lastName, $user->email, $token);
-        $ok = $stmt->execute();
+        $ok = $stmt->execute([$user->username, $user->firstName, $user->lastName, $user->email, $token]);
         return $ok ? $token : null;
     }
 
@@ -58,15 +56,13 @@ class Db
     public function getInviteByToken(string $token): ?User
     {
         $stmt = $this->client->prepare('SELECT id, username, firstName, lastName, email, token FROM invites WHERE token=?');
-        $stmt->bind_param('s', $token);
-        $ok = $stmt->execute();
+        $ok = $stmt->execute([$token]);
 
         if (!$ok) {
             return null;
         }
 
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
+        $row = $stmt->fetch();
 
         return User::fromArray($row);
     }
@@ -76,17 +72,15 @@ class Db
      */
     public function checkInviteExistsByEmail(string $email): bool
     {
-        $stmt = $this->client->prepare('SELECT id FROM invites WHERE email=?');
-        $stmt->bind_param('s', $email);
-        $ok = $stmt->execute();
+        $stmt = $this->client->prepare('SELECT COUNT(*) FROM invites WHERE email=?');
+        $ok = $stmt->execute([$email]);
 
         if (!$ok) {
             return false;
         }
 
-        $stmt->store_result();
-
-        return $stmt->num_rows > 0;
+        $num = $stmt->fetchColumn();
+        return $num > 0;
     }
 
     /**
@@ -95,8 +89,7 @@ class Db
     public function removeInviteByEmail(string $email): bool
     {
         $stmt = $this->client->prepare('DELETE FROM invites WHERE email=?');
-        $stmt->bind_param('s', $email);
-        $ok = $stmt->execute();
+        $ok = $stmt->execute([$email]);
         return $ok;
     }
 

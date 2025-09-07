@@ -9,6 +9,8 @@ composer.phar
 /.env
 
 # Dev
+/data.db
+/data.original.db
 /lldap_data/
 
 # Misc

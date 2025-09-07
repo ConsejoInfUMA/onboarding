@@ -1,0 +1,9 @@
+CREATE TABLE "invites" (
+	"id"	 INTEGER NOT NULL UNIQUE,
+	"username"	TEXT NOT NULL,
+	"firstName"	TEXT NOT NULL,
+	"lastName"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL UNIQUE,
+	"token"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);

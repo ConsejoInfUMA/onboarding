@@ -67,7 +67,7 @@ class RegisterController
             return new HtmlResponse(Plates::renderError('Invalid token'));
         }
 
-        $user->username = $body['username'];
+        $user->username = trim($body['username']);
 
         $ok = $ldap->addUser($user, $body['password']);
         if (!$ok) {

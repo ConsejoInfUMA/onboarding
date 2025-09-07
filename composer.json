@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "ext-mysqli": "*",
+        "ext-pdo": "*",
         "ext-ldap": "*",
         "league/route": "^6.2",
         "league/plates": "^3.6",

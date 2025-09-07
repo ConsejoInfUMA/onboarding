@@ -53,16 +53,12 @@ class Env
      */
     public static function db(): array
     {
-        $host = $_ENV["DB_HOST"] ?? "127.0.0.1";
-        $port = $_ENV["DB_PORT"] ?? 3306;
-        $user = $_ENV["DB_USER"] ?? "";
-        $password = $_ENV["DB_PASSWORD"] ?? "";
-        $name = $_ENV["DB_NAME"] ?? "onboarding";
+        $dsn = $_ENV["DB_DSN"] ?? '';
+        $user = $_ENV["DB_USER"] ?? null;
+        $password = $_ENV["DB_PASSWORD"] ?? null;
 
         return [
-            "host" => $host,
-            "port" => $port,
-            "database" => $name,
+            "dsn" => $dsn,
             "username" => $user,
             "password" => $password
         ];

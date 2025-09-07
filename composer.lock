@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "547a27089cb97d8e722f1102dd8a300d",
+    "content-hash": "2b33f7641aacbb589de4a36e77b433fe",
     "packages": [
         {
             "name": "html2text/html2text",
@@ -969,7 +969,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-mysqli": "*",
+        "ext-pdo": "*",
         "ext-ldap": "*"
     },
     "platform-dev": {},

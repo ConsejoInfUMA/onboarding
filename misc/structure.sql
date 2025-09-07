@@ -7,6 +7,5 @@ CREATE TABLE `invites` (
   `email` varchar(156) NOT NULL,
   `token` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `invites_unique` (`email`),
-  UNIQUE KEY `invites_unique_1` (`username`)
+  UNIQUE KEY `invites_unique` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
