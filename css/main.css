@@ -3,3 +3,8 @@ source.icon, img.icon {
   max-height:128px;
   margin-top:10px
 }
+
+img.logo {
+    max-width: 100vw;
+    max-height: 100px;
+}
