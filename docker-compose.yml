@@ -1,9 +1,5 @@
 # Development server
 
-volumes:
-  mailpit_data:
-    driver: local
-
 services:
   lldap:
     image: lldap/lldap:stable
