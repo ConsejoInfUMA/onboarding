@@ -30,36 +30,44 @@ $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
 $router = new League\Route\Router;
 $router->middleware(new AuthMiddleware);
 
-$router->get('/', [HomeController::class, 'index']);
-$router->post('/', [HomeController::class, 'post']);
+$basePath = Env::app_path();
+
+function path(string $base): string {
+    global $basePath;
+
+    return $base . $basePath;
+}
+
+$router->get(path('/'), [HomeController::class, 'index']);
+$router->post(path('/'), [HomeController::class, 'post']);
 
 // Auth
-$router->group('/login', function (RouteGroup $route) {
+$router->group(path('/login'), function (RouteGroup $route) {
     $route->get('/', [AuthController::class, 'index']);
     $route->post('/', [AuthController::class, 'post']);
 });
 
-$router->get('/logout', [AuthController::class, 'logout']);
+$router->get(path('/logout'), [AuthController::class, 'logout']);
 
 // Diff
-$router->group('/diff', function (RouteGroup $route) {
+$router->group(path('/diff'), function (RouteGroup $route) {
     $route->get('/', [DiffController::class, 'index']);
     $route->post('/', [DiffController::class, 'post']);
     $route->post('/apply', [DiffController::class, 'apply']);
 });
 
 // Register
-$router->group('/register', function (RouteGroup $route) {
+$router->group(path(base: '/register'), function (RouteGroup $route) {
     $route->get('/', [RegisterController::class, 'index']);
     $route->post('/', [RegisterController::class, 'post']);
 });
 
-$router->group('/invites', function (RouteGroup $route) {
+$router->group(path(base: '/invites'), function (RouteGroup $route) {
     $route->get('/', [InviteController::class, 'index']);
 });
 
 if (Env::app_debug()) {
-    $router->group('/dev', function (RouteGroup $route) {
+    $router->group(path('/dev'), function (RouteGroup $route) {
         $route->get('/email', [DevController::class, 'email']);
     });
 }

@@ -29,7 +29,7 @@ class Env
      */
     public static function app_url(string $path, ?array $query = null): string
     {
-        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080';
+        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080' . self::app_path();
         $queryStr = '';
 
         if ($query !== null) {
@@ -37,6 +37,11 @@ class Env
         }
 
         return $base . $path . $queryStr;
+    }
+
+    public static function app_path(): string
+    {
+        return $_ENV['APP_PATH'] ?? '';
     }
 
     public static function app_debug(): bool
