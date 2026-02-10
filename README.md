@@ -41,13 +41,3 @@ Copia el archivo `.env.example` a .env y modifica los valores con los necesarios
 | MAIL_PASSWORD | Contraseña del usuario SMTP que enviará los correos  | ... |
 | MAIL_SECURE | Método de encriptación a usar | starttls / ssl / none |
 | MAIL_FROM | Nombre mostrado al enviar correo electrónico | CEETSII |
-
-## Flujo de trabajo
-1. El administrador sube un CSV con todos los representantes del año.
-2. La aplicación, a partir de los datos del LDAP y la base de datos local, construye una lista con los usuarios que debe añadir, eliminar y no modificar.
-    - Si no está en LDAP / base de datos pero SÍ en el CSV: El usuario es invitado.
-    - Si está tanto en LDAP / base de datos como en el CSV: El usuario no es modificado.
-    - Si está en LDAP o en la base de datos pero NO en el CSV: El usuario es borrado (se borra su invitación o se elimina el usuario de LDAP).
-3. Los usuarios nuevos recibirán un correo electrónico con el enlace de invitación.
-4. El usuario hace click al enlace y completa el proceso de registro.
-5. Profit :3
