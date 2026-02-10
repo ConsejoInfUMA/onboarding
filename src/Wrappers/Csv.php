@@ -4,42 +4,42 @@ namespace App\Wrappers;
 
 use App\Models\User;
 use League\Csv\Reader;
+use League\Csv\Statement;
 
 class Csv
 {
-    /**
-     * Get all users from CSV
-     *
-     * @param resource $resource
-     * @return User[]
-     */
-    public static function users($resource): array
-    {
-        $users = [];
+    private const CSV_PATH = __DIR__ . '/../../input.csv';
 
-        $csv = Reader::createFromStream($resource)
+    /**
+     * Find a user in the CSV by their email address.
+     * @param string $email
+     * @return ?User
+     */
+    public static function findUserByEmail(string $email): ?User
+    {
+        $csv = Reader::from(self::CSV_PATH)
             ->setHeaderOffset(0)
             ->setEscape('');
 
         $csvColumns = Env::csv_columns();
+        $emailColumn = $csvColumns['email'];
 
-        foreach ($csv as $record) {
-            $firstName = $record[$csvColumns['firstName']];
-            $lastName = $record[$csvColumns['lastName']];
-            $email = $record[$csvColumns['email']];
-            // Evitar entradas vacías
-            if ($lastName !== '') {
-                $users[] = new User(
-                    firstName: self::__normalize($firstName),
-                    lastName: self::__normalize($lastName),
-                    email: $email,
-                );
-            }
+        $stmt = (new Statement())
+            ->where(fn(array $record) => trim($record[$emailColumn] ?? '') === trim($email))
+            ->limit(1);
+
+        $result = $stmt->process($csv);
+        $record = $result->nth(0);
+
+        if (empty($record)) {
+            return null;
         }
 
-        // Eliminar usuarios duplicados
-        $usersFiltered = array_unique($users);
-        return $usersFiltered;
+        return new User(
+            firstName: self::__normalize($record[$csvColumns['firstName']]),
+            lastName: self::__normalize($record[$csvColumns['lastName']]),
+            email: $record[$emailColumn],
+        );
     }
 
     private static function __normalize(string $str): string

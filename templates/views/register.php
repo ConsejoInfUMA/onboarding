@@ -1,4 +1,4 @@
-<?php $this->layout('layouts/default', ['title' => 'Register']) ?>
+<?php $this->layout('layouts/default', ['title' => 'Registro']) ?>
 
 <h3>Registro</h3>
 
@@ -12,18 +12,18 @@
             <input type="text" aria-label="Email" value="<?=$this->e($user->email)?>" readonly disabled>
         </label>
         <label>
-            Username
+            Nombre de usuario
             <input type="text" name="username" aria-label="Username" value="<?=$this->e($user->username)?>">
         </label>
         <label>
-            Password
+            Contraseña
             <input type="password" name="password" placeholder="Password" aria-label="Password">
         </label>
         <label>
-            Confirm password
+            Confirmar contraseña
             <input type="password" name="password_confirm" placeholder="Password Confirm" aria-label="Password Confirm">
         </label>
     </fieldset>
 
-    <button type="submit">Register</button>
+    <button type="submit">Registrar</button>
 </form>

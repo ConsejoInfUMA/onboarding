@@ -29,7 +29,7 @@ class Env
      */
     public static function app_url(string $path, ?array $query = null): string
     {
-        $base = $_ENV['APP_URL'] ?? 'http://localhost:8080' . self::app_path();
+        $base = $_ENV['APP_URL'] ?? 'http://localhost:8000';
         $queryStr = '';
 
         if ($query !== null) {
@@ -39,39 +39,9 @@ class Env
         return $base . $path . $queryStr;
     }
 
-    public static function app_path(): string
-    {
-        return $_ENV['APP_PATH'] ?? '';
-    }
-
     public static function app_debug(): bool
     {
         return $_ENV['APP_DEBUG'] ?? false;
-    }
-
-    /**
-     * Get full instance url where all services provided are.
-     */
-    public static function instance_url(string $path): string
-    {
-        $base = $_ENV['INSTANCE_URL'] ?? 'http://localhost';
-        return $base . $path;
-    }
-
-    /**
-     * Get DB data.
-     */
-    public static function db(): array
-    {
-        $dsn = $_ENV["DB_DSN"] ?? '';
-        $user = $_ENV["DB_USER"] ?? null;
-        $password = $_ENV["DB_PASSWORD"] ?? null;
-
-        return [
-            "dsn" => $dsn,
-            "username" => $user,
-            "password" => $password
-        ];
     }
 
     /**

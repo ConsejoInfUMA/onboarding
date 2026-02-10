@@ -20,17 +20,8 @@ class DataHandler
         $this->mailer = new Mail;
     }
 
-    /**
-     * Get both invited and already on LDAP server users.
-     *
-     * @return User[]
-     */
-    public function getUsers(): array
-    {
-        return [
-            ...$this->ldap->getUsers(),
-            ...$this->db->getInvites(),
-        ];
+    public function checkUser(string $email): bool {
+        return $this->db->checkInviteExistsByEmail($email) || $this->ldap->checkUserExistsByEmail($email);
     }
 
     /**

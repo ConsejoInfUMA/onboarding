@@ -11,7 +11,6 @@ class Plates
         $engine = new Engine(__DIR__ . '/../../templates');
 
         $engine->registerFunction('url', fn(string $path, ?array $query = null) => Env::app_url($path, $query));
-        $engine->registerFunction('instance_url', fn(string $path) => Env::instance_url($path));
         $engine->registerFunction('isLoggedIn', fn() => Session::isLoggedIn());
 
         return $engine->render($template, $data);

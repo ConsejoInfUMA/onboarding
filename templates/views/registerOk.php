@@ -1,3 +1,3 @@
-<?php $this->layout('layouts/default', ['title' => 'Diff']) ?>
+<?php $this->layout('layouts/default', ['title' => '¡Bienvenid@!']) ?>
 
 <h3>Usuario creado con éxito, ¡bienvenid@!</h3>

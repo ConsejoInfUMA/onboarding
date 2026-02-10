@@ -20,24 +20,24 @@
         <nav>
             <ul>
                 <li>
-                    <a href="<?=$this->url('/')?>">Home</a>
-                </li>
-                <li>
-                    <a href="<?=$this->url('/invites')?>">Invites</a>
+                    <a href="<?=$this->url('/')?>">Inicio</a>
                 </li>
                 <?php if ($this->isLoggedIn()): ?>
                 <li>
-                    <a href="<?=$this->url('/logout')?>">Logout</a>
+                    <a href="<?=$this->url('/dashboard')?>">Panel de control</a>
+                </li>
+                <li>
+                    <a href="<?=$this->url('/logout')?>">Cerrar sesión</a>
+                </li>
+                <?php else: ?>
+                <li>
+                    <a href="<?=$this->url('/login')?>">Restringido</a>
                 </li>
                 <?php endif ?>
             </ul>
         </nav>
     </header>
-    <?php if (isset($full) && $full): ?>
-    <main style="grid-column: unset;">
-    <?php else: ?>
     <main>
-    <?php endif ?>
         <?= $this->section('content') ?>
     </main>
 </body>

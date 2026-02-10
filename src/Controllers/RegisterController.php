@@ -5,39 +5,34 @@ namespace App\Controllers;
 use App\Wrappers\Db;
 use App\Wrappers\Ldap;
 use App\Wrappers\Plates;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Psr\Http\Message\ServerRequestInterface;
 
-class RegisterController
+class RegisterController extends Controller
 {
     /**
      * User register page.
      *
      * Requires a token sent by the user via query.
      */
-    public static function index(ServerRequestInterface $request): Response
+    public static function index(): void
     {
-        $query = $request->getQueryParams();
-        if (!isset($query['token'])) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('No token sent'));
+        $token = $_GET['token'] ?? null;
+        if ($token === null) {
+            self::_renderError(400, 'No token sent');
+            return;
         }
 
         $db = new Db;
-        $token = $query['token'];
 
         $user = $db->getInviteByToken($token);
-
         if ($user === null) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('Invalid token'));
+            self::_renderError(400, 'Invalid token');
+            return;
         }
 
-        return new HtmlResponse(Plates::render('views/register', [
+        echo Plates::render('views/register', [
             'user' => $user,
             'token' => $token,
-        ]));
+        ]);
     }
 
     /**
@@ -45,41 +40,42 @@ class RegisterController
      *
      * Requires token, password + confirm and username sent via POST body.
      */
-    public static function post(ServerRequestInterface $request): Response
+    public static function post(): void
     {
-        $body = $request->getParsedBody();
-        if ($body === null) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('No body sent'));
+        $token = $_POST['token'] ?? null;
+        $password = $_POST['password'] ?? null;
+        $password_confirm = $_POST['password_confirm'] ?? null;
+        $username = $_POST['username'] ?? null;
+
+        if ($token === null || $password === null || $password_confirm === null || $username === null) {
+            self::_renderError(400, 'Invalid body');
+            return;
         }
 
-        if (!isset($body['token'], $body['password'], $body['password_confirm'], $body['username'])) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('Invalid body'));
-        }
-
-        if ($body['password'] !== $body['password_confirm']) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('Passwords do not match'));
+        if ($password !== $password_confirm) {
+            self::_renderError(400, 'Passwords do not match');
+            return;
         }
 
         $db = new Db;
         $ldap = new Ldap;
 
-        $user = $db->getInviteByToken($body['token']);
+        $user = $db->getInviteByToken($token);
         if ($user === null) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('Invalid token'));
+            self::_renderError(400, 'Invalid token');
+            return;
         }
 
-        $user->username = trim($body['username']);
+        $user->username = trim($username);
 
-        $ok = $ldap->addUser($user, $body['password']);
+        $ok = $ldap->addUser($user, $password);
         if (!$ok) {
-            http_response_code(500);
-            return new HtmlResponse(Plates::renderError('There was an error creating the user'));
+            self::_renderError(500, 'There was an error creating the user');
+            return;
         }
 
-        return new HtmlResponse(Plates::render('views/registerOk'));
+        $db->removeInviteByEmail($user->email);
+
+        echo Plates::render('views/registerOk');
     }
 }

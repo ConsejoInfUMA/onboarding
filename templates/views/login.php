@@ -2,7 +2,7 @@
 
 <form method="post" action="<?= $this->url('/login') ?>">
     <p>
-        <label>Password</label>
+        <label>Contraseña</label>
         <input type="password" name="password">
     </p>
 

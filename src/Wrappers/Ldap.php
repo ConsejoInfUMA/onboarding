@@ -36,35 +36,27 @@ class Ldap
     }
 
     /**
-     * Get all users found in LDAP server.
-     *
-     * @return User[]
+     * Check if a user exists in LDAP by their email address.
+     * @param string $email
+     * @return bool
      */
-    public function getUsers(): array
+    public function checkUserExistsByEmail(string $email): bool
     {
-        $users = [];
-        $sr = ldap_search($this->conn, $this->base, "(objectClass=person)");
+        // 1. Define the search filter
+        // We escape the email to prevent LDAP injection
+        $filter = "(mail=" . ldap_escape($email, "", LDAP_ESCAPE_FILTER) . ")";
 
-        if ($sr === false) {
-            throw new \Exception("Could not search for users");
+        // 2. Search only for the 'dn' to keep the response lightweight
+        $search = @ldap_search($this->conn, $this->base, $filter, ['dn']);
+
+        if (!$search) {
+            return false;
         }
 
-        $data = ldap_get_entries($this->conn, $sr);
+        // 3. Count the entries found
+        $count = ldap_count_entries($this->conn, $search);
 
-        if ($data['count'] === 0) {
-            return $users;
-        }
-
-        for ($i = 0; $i < $data['count']; $i++) {
-            $user = $data[$i];
-
-            // Ignoramos cuenta de administrador
-            if ($user['uid'][0] !== 'admin') {
-                $users[] = User::fromLdap($user);
-            }
-        }
-
-        return $users;
+        return $count > 0;
     }
 
     /**

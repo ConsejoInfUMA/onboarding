@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Wrappers\Db;
 use App\Wrappers\Env;
 use App\Wrappers\Ldap;
 use App\Wrappers\Plates;
@@ -14,44 +15,57 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * Admin auth controller
  */
-class AuthController
+class AuthController extends Controller
 {
     /**
      * Login page.
      */
-    public static function index(ServerRequestInterface $request): Response
+    public static function index(): void
     {
-        return new HtmlResponse(Plates::render('views/login'));
+        echo Plates::render('views/login');
     }
 
     /**
      * Login form sent.
      */
-    public static function post(ServerRequestInterface $request): Response
+    public static function post(): void
     {
-        $body = $request->getParsedBody();
-        if ($body === null) {
-            return new HtmlResponse(Plates::renderError('No body sent'));
+        $password = $_POST['password'] ?? null;
+        if ($password === null) {
+            self::_renderError(400, 'Invalid body');
+            return;
         }
 
         try {
-            new Ldap($body['password']);
+            new Ldap($password);
             Session::setLoggedIn(true);
-
-            return new RedirectResponse(Env::app_url('/'));
+            self::_redirect('/dashboard');
         } catch (\Exception $e) {
-            return new HtmlResponse(Plates::render('views/login', [
-                'error' => 'Invalid password',
-            ]));
+            self::_renderError(401, 'Could not login');
         }
+    }
+
+    public static function dashboard(): void
+    {
+        if (!Session::isLoggedIn()) {
+            self::_redirect('/login');
+            return;
+        }
+
+        $db = new Db();
+        $users = $db->getInvites();
+
+        echo Plates::render('views/invites', [
+            'users' => $users,
+        ]);
     }
 
     /**
      * Destroy session.
      */
-    public static function logout(ServerRequestInterface $request): Response
+    public static function logout(): void
     {
         Session::destroy();
-        return new RedirectResponse(Env::app_url('/login'));
+        self::_redirect('/login');
     }
 }

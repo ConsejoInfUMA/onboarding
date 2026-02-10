@@ -3,39 +3,44 @@
 namespace App\Controllers;
 
 use App\Wrappers\Csv;
+use App\Wrappers\DataHandler;
 use App\Wrappers\Plates;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\UploadedFile;
-use Psr\Http\Message\ServerRequestInterface;
 
-class HomeController
+class HomeController extends Controller
 {
-    /**
-     * CSV import page.
-     */
-    public static function index(ServerRequestInterface $request): Response
+    public static function index(): void
     {
-        return new HtmlResponse(Plates::render('views/home'));
+        echo Plates::render('views/home');
     }
 
-    /**
-     * CSV import form sent.
-     */
-    public static function post(ServerRequestInterface $request): Response
+    public static function post(): void
     {
-        $files = $request->getUploadedFiles();
-
-        if (!array_key_exists('csv', $files)) {
-            http_response_code(400);
-            return new HtmlResponse(Plates::renderError('File not sent'));
+        $rawEmail = $_POST['email'] ?? null;
+        if ($rawEmail === null || filter_var($rawEmail, FILTER_VALIDATE_EMAIL) === false) {
+            self::_renderError(400, 'Invalid body');
+            return;
         }
 
-        /** @var UploadedFile */
-        $f = $files['csv'];
+        $handler = new DataHandler();
 
-        $users = Csv::users($f->getStream()->detach());
+        $email = trim($rawEmail);
+        if ($handler->checkUser($email)) {
+            self::_renderError(400, 'User already exists');
+            return;
+        }
 
-        return new HtmlResponse(Plates::render('views/preview', ['users' => $users]));
+        $user = Csv::findUserByEmail($email);
+        if ($user === null) {
+            self::_renderError(400, 'User doesn\'t exist');
+            return;
+        }
+
+        $ok = $handler->inviteUser($user);
+        if (!$ok) {
+            self::_renderError(500, 'There was an error inviting the user');
+            return;
+        }
+
+        echo Plates::render('views/invited');
     }
 }

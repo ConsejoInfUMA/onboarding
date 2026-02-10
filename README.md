@@ -28,12 +28,6 @@ Copia el archivo `.env.example` a .env y modifica los valores con los necesarios
 | Variable | Descripción | Ejemplo |
 | :--: | :--: | :--: |
 | APP_URL | Url apuntando a la aplicación | http://localhost:8080/onboarding |
-| INSTANCE_URL | Url apuntando a la dirección que contiene todos los servicios que proveemos | https://ceetsii.local |
-| DB_HOST | IP / Hostname de la BBDD | 127.0.0.1 |
-| DB_PORT | Puerto de la BBDD | 3306 |
-| DB_USER | Usuario de la BBDD | ceetsii |
-| DB_PASSWORD | Contraseña de la BBDD | ... |
-| DB_NAME | Nombre de la BBDD | onboarding |
 | LDAP_URI | URI de LDAP | ldap://127.0.0.1:3890 |
 | LDAP_USERNAME | Nombre de usuario del administrador de LDAP | admin |
 | LDAP_PASSWORD | Contraseña del administrador de LDAP | ... |

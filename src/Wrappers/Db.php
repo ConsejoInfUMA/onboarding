@@ -5,20 +5,16 @@ namespace App\Wrappers;
 use App\Models\User;
 
 /**
- * DB Wrapper
+ * DB Wrapper using SQLite3
  */
 class Db
 {
-    private \PDO $client;
+    private \SQLite3 $client;
 
     public function __construct()
     {
-        $db = Env::db();
-        $this->client = new \PDO($db['dsn'], $db['username'], $db['password'], [
-            \PDO::ATTR_ERRMODE            => \PDO::ERR_NONE,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES   => false,
-        ]);
+        // SQLite3 expects a path to the database file
+        $this->client = new \SQLite3(__DIR__ . '/../../data.db');
     }
 
     /**
@@ -29,9 +25,12 @@ class Db
     public function getInvites(): array
     {
         $users = [];
-        $stmt = $this->client->query('SELECT username, firstName, lastName, email FROM invites');
-        while ($row = $stmt->fetch()) {
-            $users[] = User::fromArray($row);
+        $results = $this->client->query('SELECT username, firstName, lastName, email FROM invites');
+
+        if ($results !== false) {
+            while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+                $users[] = User::fromArray($row);
+            }
         }
 
         return $users;
@@ -46,8 +45,15 @@ class Db
     {
         $token = $this->__generateToken();
         $stmt = $this->client->prepare('INSERT INTO invites(username, firstName, lastName, email, token) VALUES(?, ?, ?, ?, ?)');
-        $ok = $stmt->execute([$user->username, $user->firstName, $user->lastName, $user->email, $token]);
-        return $ok ? $token : null;
+
+        $stmt->bindValue(1, $user->username);
+        $stmt->bindValue(2, $user->firstName);
+        $stmt->bindValue(3, $user->lastName);
+        $stmt->bindValue(4, $user->email);
+        $stmt->bindValue(5, $token);
+
+        $result = $stmt->execute();
+        return $result ? $token : null;
     }
 
     /**
@@ -55,14 +61,11 @@ class Db
      */
     public function getInviteByToken(string $token): ?User
     {
-        $stmt = $this->client->prepare('SELECT id, username, firstName, lastName, email, token FROM invites WHERE token=?');
-        $ok = $stmt->execute([$token]);
+        $stmt = $this->client->prepare('SELECT id, username, firstName, lastName, email, token FROM invites WHERE token=:token');
+        $stmt->bindValue(':token', $token);
 
-        if (!$ok) {
-            return null;
-        }
-
-        $row = $stmt->fetch();
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_ASSOC);
 
         if ($row === false) {
             return null;
@@ -76,15 +79,13 @@ class Db
      */
     public function checkInviteExistsByEmail(string $email): bool
     {
-        $stmt = $this->client->prepare('SELECT COUNT(*) FROM invites WHERE email=?');
-        $ok = $stmt->execute([$email]);
+        $stmt = $this->client->prepare('SELECT COUNT(*) as count FROM invites WHERE email=:email');
+        $stmt->bindValue(':email', $email);
 
-        if (!$ok) {
-            return false;
-        }
+        $result = $stmt->execute();
+        $row = $result->fetchArray(SQLITE3_ASSOC);
 
-        $num = $stmt->fetchColumn();
-        return $num > 0;
+        return ($row && $row['count'] > 0);
     }
 
     /**
@@ -92,9 +93,10 @@ class Db
      */
     public function removeInviteByEmail(string $email): bool
     {
-        $stmt = $this->client->prepare('DELETE FROM invites WHERE email=?');
-        $ok = $stmt->execute([$email]);
-        return $ok;
+        $stmt = $this->client->prepare('DELETE FROM invites WHERE email=:email');
+        $stmt->bindValue(':email', $email);
+
+        return (bool)$stmt->execute();
     }
 
     private function __generateToken(): string

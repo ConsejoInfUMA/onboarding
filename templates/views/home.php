@@ -1,12 +1,11 @@
-<?php $this->layout('layouts/default', ['title' => 'Home']) ?>
+<?php $this->layout('layouts/default', ['title' => 'Inicio']) ?>
 
-<h3>Dashboard</h3>
+<h3>Cuenta</h3>
 
-<form method="post" action="<?= $this->url('/') ?>" enctype="multipart/form-data">
+<form method="post" action="<?= $this->url('/') ?>">
     <p>
-        <label>CSV</label>
-        <input accept="text/csv" type="file" name="csv">
+        <label>Correo electrónico</label>
+        <input type="email" name="email">
     </p>
-
-    <button type="submit">Start import</button>
+    <button type="submit">Buscar</button>
 </form>
