@@ -3,15 +3,14 @@ Página web hecha en PHP para importar los usuarios al servidor LDAP del CEETSII
 
 ## Conceptos
 - LDAP: Lightweight Directory Access Protocol, se utiliza para tener un sistema centralizado de inicio de sesión usado en todos los servicios que ofrecemos.
-- Base de datos: Generalmente MySQL/MariaDB, aquí se almacenan las invitaciones de todos los representantes.
+- Base de datos: En este caso SQLite3, aquí se almacenan las invitaciones de todos los representantes.
 
 ## Instalación
 Esta aplicación necesita las siguientes dependencias:
 - PHP >= 8.0
-    - Extensión mysqli
+    - Extensión sqlite3
     - Extensión ldap
 - Composer
-- Base de datos (MySQL / MariaDB)
 - Servidor LDAP
 - Servidor SMTP
 
@@ -20,8 +19,12 @@ Para instalar las dependencias ejecuta el siguiente comando:
 composer install
 ```
 
-También es necesario ejecutar el setup de la base de datos MySQL/MariaDB,
-el script `.sql` se encuentra en `misc/structure.sql`.
+También es necesario ejecutar el setup de la base de datos:
+```bash
+cd misc
+chmod +x populate.sh
+./populate.sh
+```
 
 ## Variables de entorno
 Copia el archivo `.env.example` a .env y modifica los valores con los necesarios. A continuación se detalla cada campo:
