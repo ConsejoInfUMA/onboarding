@@ -9,12 +9,12 @@ use App\Models\User;
  */
 class Db
 {
+    private const string DB_PATH = __DIR__ . '/../../data.db';
     private \SQLite3 $client;
 
     public function __construct()
     {
-        // SQLite3 expects a path to the database file
-        $this->client = new \SQLite3(__DIR__ . '/../../data.db');
+        $this->client = new \SQLite3(self::DB_PATH);
     }
 
     /**

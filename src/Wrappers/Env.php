@@ -87,13 +87,15 @@ class Env
     /**
      * Get CSV headers used for parsing.
      */
-    public static function csv_columns(): array
+    public static function input(): array
     {
-        $firstName = $_ENV['CSV_COLUMN_FIRSTNAME'] ?? '';
-        $lastName = $_ENV['CSV_COLUMN_LASTNAME'] ?? '';
-        $email = $_ENV['CSV_COLUMN_EMAIL'] ?? '';
+        $start = $_ENV['INPUT_CELL_START'] ?? 'A1';
+        $firstName = $_ENV['INPUT_COLUMN_FIRSTNAME'] ?? '';
+        $lastName = $_ENV['INPUT_COLUMN_LASTNAME'] ?? '';
+        $email = $_ENV['INPUT_COLUMN_EMAIL'] ?? '';
 
         return [
+            'start' => $start,
             'firstName' => $firstName,
             'lastName' => $lastName,
             'email' => $email,

@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Wrappers\Csv;
 use App\Wrappers\DataHandler;
+use App\Wrappers\Input;
 use App\Wrappers\Plates;
 
 class HomeController extends Controller
@@ -29,7 +29,7 @@ class HomeController extends Controller
             return;
         }
 
-        $user = Csv::findUserByEmail($email);
+        $user = Input::findUserByEmail($email);
         if ($user === null) {
             self::_renderError(400, 'User doesn\'t exist');
             return;

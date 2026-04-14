@@ -42,18 +42,12 @@ class Ldap
      */
     public function checkUserExistsByEmail(string $email): bool
     {
-        // 1. Define the search filter
-        // We escape the email to prevent LDAP injection
         $filter = "(mail=" . ldap_escape($email, "", LDAP_ESCAPE_FILTER) . ")";
-
-        // 2. Search only for the 'dn' to keep the response lightweight
         $search = @ldap_search($this->conn, $this->base, $filter, ['dn']);
-
         if (!$search) {
             return false;
         }
 
-        // 3. Count the entries found
         $count = ldap_count_entries($this->conn, $search);
 
         return $count > 0;

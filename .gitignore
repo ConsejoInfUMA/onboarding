@@ -14,5 +14,5 @@ composer.phar
 /lldap_data/
 
 # Misc
-/input.csv
-/.~lock.*.csv#
+/input.xlsx
+/.~lock.*.xlsx#

@@ -35,9 +35,9 @@ Copia el archivo `.env.example` a .env y modifica los valores con los necesarios
 | LDAP_USERNAME | Nombre de usuario del administrador de LDAP | admin |
 | LDAP_PASSWORD | Contraseña del administrador de LDAP | ... |
 | LDAP_BASE | Base DN de LDAP | ou=people,dc=org,dc=es |
-| CSV_COLUMN_FIRSTNAME | Nombre de la cabecera de CSV que contiene el nombre del usuario | Nombre |
-| CSV_COLUMN_LASTNAME | Nombre de la cabecera de CSV que contiene los apellido(s) del usuario | Apellido(s) |
-| CSV_COLUMN_EMAIL | Nombre de la cabecera de CSV que contiene el correo electrónico del usuario | Correo principal de contacto |
+| INPUT_COLUMN_FIRSTNAME | Index de la cabecera que contiene el nombre del usuario | 0 |
+| INPUT_COLUMN_LASTNAME | Index de la cabecera CSV que contiene los apellido(s) del usuario | 1 |
+| INPUT_COLUMN_EMAIL | Index de la cabecera que contiene el correo electrónico del usuario | 2 |
 | MAIL_HOST | IP / Hostname del SMTP | 127.0.0.1 |
 | MAIL_PORT | Puerto del SMTP | 3306 |
 | MAIL_USERNAME | Nombre de usuario SMTP que enviará los correos | test@example.com |
